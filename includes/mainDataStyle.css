@@ -1,0 +1,50 @@
+@charset "utf-8";
+/* CSS Document */
+div {
+	border: 1px solid black;
+	width: 1000px;
+	background-color: #DBB84D;
+}
+table, th, td {
+   border: 1px solid black;
+   border-collapse: collapse;
+   padding: 5px;
+   width: 1000px;
+}
+#dataList th{
+    background-color: #780000;
+    color: white;
+}
+#dataList tr:nth-child(even) {
+    background-color: #FFF0B2;
+    color: black;
+}
+#dataList tr:nth-child(odd) {
+    background-color: #FFFFD1;
+    color: black;
+
+}
+
+#card div {
+	width: 200;	
+}
+
+#dataItemList th {
+	width: 100px;
+	text-align:left;
+	background-color: #780000;
+    color: white;
+}
+
+#dataItemList td{
+	width: 500;	
+}
+
+#dataItemList tr:nth-child(even) {
+    background-color: #FFF0B2;
+    color: black;
+}
+#dataItemList tr:nth-child(odd) {
+    background-color: #FFFFD1;
+    color: black;
+
