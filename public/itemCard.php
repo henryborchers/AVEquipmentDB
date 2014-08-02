@@ -1,8 +1,8 @@
 <?php include("../includes/header.php"); ?>
 <?php
 //---------
-
-	echo $_GET["card"];
+// TODO: figure out why I can't remove the following line without breaking it
+	$dummy = $_GET["card"];
 	$cardQuery = "SELECT ";
 	$cardQuery .= "Friendly_name, ";
 	$cardQuery .= "Company_Name, ";
@@ -18,7 +18,6 @@
 	$cardQuery .= "INNER JOIN equipmentTypes ON equipmentTypes.idequipmentTypes = Item.EquipType ";
 	$cardQuery .= "WHERE ";
 	$cardQuery .= "ItemID LIKE " . $_GET["card"] . " ";
-	echo "$cardQuery <br> <br>";
 	$cardResult = mysqli_query($db, $cardQuery);
 	if(!$cardResult) {
 		die("Database error");	
@@ -36,8 +35,6 @@
 	$cardFeaturesQuery .= "Atributes_id = idAtributes ";
 	$cardFeaturesQuery .= "WHERE ";
 	$cardFeaturesQuery .= "Item_ItemID LiKE " . $_GET["card"] . " ";
-	
-	echo "<br>Features: $cardFeaturesQuery <br>";
 	$cardFeaturesResults = mysqli_query($db, $cardFeaturesQuery);
 	if(!$cardFeaturesResults) {
 		die("Database error");	
@@ -46,24 +43,42 @@
 	while($row = mysqli_fetch_array($cardFeaturesResults)){
 		$features[] = $row[0];
 	}
-	print_r($features);
+	mysqli_free_result($cardFeaturesResults);
 	
+// get query of connections
+	$connectionQuery = "SELECT ";
+	$connectionQuery .="ItemID, ";
+	$connectionQuery .="Class, ";
+	$connectionQuery .="ConnectorType, ";
+	$connectionQuery .="CONCAT_WS(' ', '(',Quanity,')', ConnectorType) AS connections ";
+	$connectionQuery .="FROM ";
+	$connectionQuery .="ConnectorJoinTable ";
+	$connectionQuery .="INNER JOIN ";
+	$connectionQuery .="Connectors ";
+	$connectionQuery .="ON ";
+	$connectionQuery .="Connectors.Connectors_ID = ConnectorJoinTable.ConnectorID " ;
+	$connectionQuery .="WHERE ";
+	$connectionQuery .="ItemID = ";
+	$connectionQuery .=$_GET["card"] . " ";
+	$connectionQuery .="ORDER BY Class, ConnectorType";
+	echo $connectionQuery;
 	
+	$connectionResult = mysqli_query($db, $connectionQuery);
+	if(!$connectionResult) {
+		die("Database error");
+	}
 	
-	echo "Card Queury: $cardQuery <br>";
-	print_r($card);
 // Get Queury of the documentation
-	$documentationQueury = "SELECT ";
-	$documentationQueury .= "type, ";
-	$documentationQueury .= "fileName, ";
-	$documentationQueury .= "documentName ";
-	$documentationQueury .= "FROM Documentation_has_Item ";
-	$documentationQueury .= "INNER JOIN Documentation ";
-	$documentationQueury .= "ON document_id = idDocumentation ";
-	$documentationQueury .= "WHERE ";
-	$documentationQueury .= "item_id = " . $_GET["card"] . " ";
-	echo $documentationQueury;
-	$documentationResult = mysqli_query($db, $documentationQueury);
+	$documentationQuery = "SELECT ";
+	$documentationQuery .= "type, ";
+	$documentationQuery .= "fileName, ";
+	$documentationQuery .= "documentName ";
+	$documentationQuery .= "FROM Documentation_has_Item ";
+	$documentationQuery .= "INNER JOIN Documentation ";
+	$documentationQuery .= "ON document_id = idDocumentation ";
+	$documentationQuery .= "WHERE ";
+	$documentationQuery .= "item_id = " . $_GET["card"] . " ";
+	$documentationResult = mysqli_query($db, $documentationQuery);
 	if(!$documentationResult) {
 		die("Database error");
 	}
@@ -73,53 +88,68 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Untitled Document</title>
+<title>Equipment: card view</title>
+<link rel="stylesheet" type="text/css" href="../includes/mainDataStyle.css">
 </head>
 
 <body>
-<h1>Equipment record</h1>
-<div>
-<table width="800" border="1">
+<div id="card">
+<h1>Equipment Record</h1>
+<table id = "dataitemList" border="1">
   <tbody>
     <tr>
-      <td>Item Number:</td>
+      <th>Item Number:</td>
       <td><?php echo $_GET["card"]?></td>
     </tr>
     <tr>
-      <td>Friendly Name:</td>
+      <th>Friendly Name:</td>
       <td> <?php echo $card["Friendly_name"]; ?> </td>
     </tr>
     <tr>
-      <td>Manufacture:</td>
+      <th>Manufacture:</td>
       <td><?php echo $card["Company_Name"]; ?></td>
     </tr>
     
     <tr>
-      <td>Model Name:</td>
+      <th>Model Name:</td>
       <td><?php echo $card["Model"]; ?> </td>
     </tr>
      <tr>
-      <td>Serial Number:</td>
+      <th>Serial Number:</td>
       <td><?php echo $card["Serial_Number"]; ?> </td>
     </tr>
      <tr>
-      <td>Type:</td>
+      <th>Type:</td>
       <td> <?php echo $card["EquipType"]; ?> </td>
     </tr>
     <tr>
-      <td>Professional/Consumer:</td>
+      <th>Professional/Consumer:</td>
       <td><?php echo $card["Consumer_Professional"]; ?> </td>
     </tr>
     <tr>
-      <td>Current Location:</td>
+      <th>Current Location:</td>
       <td><?php echo $card["LocationName"]; ?> </td>
     </tr>
     <tr>
-      <td>Working Status:</td>
-      <td><?php echo $card["Working"]; ?> </td>
+      <th>Working Status:</td>
+      <td><?php echo ($card["Working"]==0) ? "Not Working": "Working"; ?> </td>
     </tr>
     <tr>
-      <td>Features:</td>
+    	<th>Connections</th>
+        <td> 
+        	<ul>
+        		<?php
+					while($connection = mysqli_fetch_assoc($connectionResult)){
+					echo "<li>";
+					echo $connection["Class"]. ": " . $connection["connections"];
+					echo "</li>";
+					}
+				?>
+        	</ul>
+        </tr>
+    </tr>
+    <tr>
+      <th>Features:</td>
       <td> 
       <ul>
 	  <?php 
@@ -130,7 +160,7 @@
       </ul>
       </td>
       <tr>
-      	<td>Documentation</td>
+      	<th>Documentation</td>
         <td>
         <ul>
 		<?php

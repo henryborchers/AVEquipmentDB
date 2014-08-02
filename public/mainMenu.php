@@ -109,9 +109,11 @@
 <head>
 <meta charset="utf-8">
 <title>Equipment Database</title>
+<link rel="stylesheet" type="text/css" href="../includes/mainDataStyle.css">
 </head>
 
 <body>
+<div id="searchBar">
 <h1> Equipment List </h1>
 <form action="mainMenu.php" method="get">
 	Type: 
@@ -196,8 +198,10 @@
     <input type="submit" name="submit" value="Search">
 
 </form>
+</div>
+<div id="results">
 <h2>Results</h2>
-<table width="1000" border="1">
+<table id = "dataList">
   <tbody>
     <tr>
     <?php
@@ -234,6 +238,7 @@
       </tbody>
 
 </table>
+</div>
 </body>
 </html>
 
