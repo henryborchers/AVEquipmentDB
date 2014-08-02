@@ -5,12 +5,13 @@ div {
 	width: 1000px;
 	background-color: #DBB84D;
 }
-table, th, td {
+#dataTable table, th, td {
    border: 1px solid black;
    border-collapse: collapse;
    padding: 5px;
    width: 1000px;
 }
+
 #dataList th{
     background-color: #780000;
     color: white;
@@ -30,7 +31,7 @@ table, th, td {
 }
 
 #dataItemList th {
-	width: 100px;
+	width: 30px;
 	text-align:left;
 	background-color: #780000;
     color: white;
@@ -39,7 +40,6 @@ table, th, td {
 #dataItemList td{
 	width: 500;	
 }
-
 #dataItemList tr:nth-child(even) {
     background-color: #FFF0B2;
     color: black;
@@ -47,4 +47,28 @@ table, th, td {
 #dataItemList tr:nth-child(odd) {
     background-color: #FFFFD1;
     color: black;
+}
 
+#search {
+	padding: 10px;
+	border-style: hidden;
+	table-layout: fixed;
+	width: 200;
+}
+#search th {
+	
+	width: 100px;
+	text-align:left;
+	background-color: #780000;
+    color: white;
+	border-style: hidden;
+}
+
+#search td {
+	width: 300px;
+	border-style: hidden;
+}
+
+#search select {
+	width: 100%;	
+}

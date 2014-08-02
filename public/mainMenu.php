@@ -113,94 +113,95 @@
 </head>
 
 <body>
-<div id="searchBar">
+<div>
 <h1> Equipment List </h1>
 <form action="mainMenu.php" method="get">
-	Type: 
-    <select name="type">
-    	<option value="all"> All </option>
-        <?php
-        while($equipmenClasstType = mysqli_fetch_row($allClassEquipment)) { 
-                				?>			
-                <option value="<?php 
-				echo "$equipmenClasstType[0]\" ";
-				if(isset($_GET["type"]) && $equipmenClasstType[0] == $_GET["type"]) {
-					echo "selected";
-				};
-				echo " \> $equipmenClasstType[0]"; 
-				
-				?></option> 
+	<table id= "search">
+    	<tr>
+    		<th> Type: </th>
+            <td> 
+    			<select name="type">
+    				<option value="all"> All </option>
+					<?php
+						while($equipmenClasstType = mysqli_fetch_row($allClassEquipment)) { 
+							echo "<option value=";
+							echo "$equipmenClasstType[0]\" ";
+							if(isset($_GET["type"]) && $equipmenClasstType[0] == $_GET["type"]) {echo "selected";}
+							echo " \> $equipmenClasstType[0]"; 
+						};
+						echo "</option>";
+	                    mysqli_free_result($allClassEquipment);
+                    ?>
+		    	</select> 
+            </td>
+		</tr>
+		<tr> 
+        	<th>Condition: </th>
+            <td>
+                <select name="condition">
+                     <option value="all"> All </option>
+                     <?php
+                        $conditionArray = ["Not Working" => 0 , "Working" => 1];
+                        foreach($conditionArray as $key => $val) {
+                            echo "<option value=". $val;
+                            if(isset($_GET["condition"]) && ($_GET["condition"]) != 'all' && $val == $_GET["condition"]){ echo " selected";};
+                            echo "> $key </option>";
+                        };
+                    ?>
+                </select>        
+            </td>
+		</tr>
+    	<tr>
+        	<th>Location:</th>
+    		<td>
+                <select name ="location">
+                    <option value="all"> All </option>
+                    <?php
+						while($location = mysqli_fetch_row($allLocations)) { 		
+								echo "<option value=\"";
+								echo "$location[0]\" ";
+								if(isset($_GET["location"]) && $location[0] == $_GET["location"]){echo "selected";};
+								echo " \> $location[0]"; 
+								echo "</option>"; 
+							};
+						mysqli_free_result($allLocations);
+                    ?>
+				    </select>
+			</td>
+    	</tr>
+        <tr>
+        	<th>Sort by:</th>
+            <td>
+                <select name="sortBy">
                 <?php
-            };
-		mysqli_free_result($equipmentType);
-        ?>
-    
-
-    </select>
-    <br>
-	Condition:
-    <select name="condition">
-    	 <option value="all"> All </option>
-		 <?php
-		 	$conditionArray = ["Not Working" => 0 , "Working" => 1];
-			foreach($conditionArray as $key => $val) {
-				echo "<option value=". $val;
-				if(isset($_GET["condition"]) && ($_GET["condition"]) != 'all' && $val == $_GET["condition"]){
-						echo " selected";	
-						}
-				echo "> $key </option>";
-			};
-?>
- 	</select>
-    
-    <br>
-
-    Location:
-    <select name ="location">
-        <option value="all"> All </option>
-        <?php
-        while($location = mysqli_fetch_row($allLocations)) { 
-                				?>			
-                <option value="<?php 
-				echo "$location[0]\" ";
-				if(isset($_GET["location"]) && $location[0] == $_GET["location"]){
-					echo "selected";	
-				};
-				echo " \> $location[0]"; 
-				
-				?></option> 
-                <?php
-            };
-		mysqli_free_result($location);
-        ?>
-
-    </select>
-    <br />
-    Sory by:
-    <select name="sortBy">
-	<?php
-    	foreach($queryArray as $displayName => $SQLName){
-		echo "<option value=$SQLName";
-		if(isset($_GET["sortBy"]) && $SQLName == $_GET["sortBy"]){
-			echo " selected";
-		}
-		echo "> $displayName </option>";
-		}
-	?>
-    </select>
-    
-    <br />
-    Debug
-    <?php
-        print_r($_GET);
-    ?>
-    <br>
-    <input type="submit" name="submit" value="Search">
-
+                    foreach($queryArray as $displayName => $SQLName){
+                    echo "<option value=$SQLName";
+                    if(isset($_GET["sortBy"]) && $SQLName == $_GET["sortBy"]){
+                        echo " selected";
+                    }
+                    echo "> $displayName </option>";
+                    }
+                ?>
+                </select>
+        	</td>
+		</tr>
+        <tr>
+        	<th> </th>
+        	<td>
+            	<input type="submit" name="submit" value="Search">
+            </td>
+        </tr>
+	</table>
 </form>
+<br />
+Debug
+<?php
+	print_r($_GET);
+?>
+
 </div>
-<div id="results">
-<h2>Results</h2>
+<div id="dataTable">-
+  <h2>Results</h2>
 <table id = "dataList">
   <tbody>
     <tr>
