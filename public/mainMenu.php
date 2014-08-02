@@ -11,19 +11,31 @@
 // Condition
 	if(!isset($_GET["condition"]) or $_GET["condition"] == 'all') {
 	}else{
-		$whereClause[] = 'Working = ' . ($_GET["condition"] == "not" ? '0' : '1');
-		
+//		$whereClause[] = 'Working = ' . ($_GET["condition"] == "not" ? '0' : '1');
+		$whereClause[] = 'Working = ' . $_GET["condition"];
+	
 	};	
 // Location
 	if(!isset($_GET["location"]) or $_GET["location"] == 'all') {
 	} else {
 		$whereClause[] = "LocationName = \"" . $_GET["location"] . "\"";
 	};
+	
+// Sort by
+	if(!isset($_GET["sortBy"])) {
+		$sortBy = 'ItemID';
+	} else {
+	$sortBy	= $_GET["sortBy"];
+	}
+	
+	
+		
+
 //check if it's working
 // TODO: Clean this up
 	
 		if(!isset($_GET["working"])) {
-		$_GET["working"] = "off";
+		$_GET["working"] = "all";
 
 	};
 
@@ -41,19 +53,24 @@
 	$equipmentClassQuery .= "DISTINCT(Class) ";
 	$equipmentClassQuery .= "FROM equipmentTypes ";
 	$allClassEquipment = mysqli_query($db, $equipmentClassQuery);
+	$queryArray = [
+					"ID" => "ItemID", 
+					"Friendly Name" => "Friendly_Name",
+					"Manufacture" => "Company_Name",
+					"Model" => "Model",
+					"Description" => "equipmentTypes.Item AS EquipType",
+					"Condition" => "Working",
+					"Location" => "LocationName"
+					];
 
 	
 	// get query of Equipment	
 	$query = "SELECT ";
-	$query .= "ItemID, ";
-	$query .= "Friendly_Name, ";
-	$query .= "Company_Name, ";
-	$query .= "Model, ";
-//	$query .= "Serial_Number, ";
-	$query .= "LocationName, ";
-	$query .= "Working, ";
-	$query .= "equipmentTypes.Item AS EquipType ";
-	$query .= "FROM Item "; 
+	foreach($queryArray as $displayName => $SQLName) {
+		$query .= $SQLName . ", ";	
+	};
+	$query = substr($query, 0, -2);
+	$query .= " FROM Item "; 
 	$query .=  "INNER JOIN Manufacture ON Manufacture.ManufactureID = Item.Manufacture_ManufactureID ";
 	$query .=  "INNER JOIN Location ON Location.LocationID = Item.Location_LocationID ";
 	$query .= "INNER JOIN equipmentTypes ON equipmentTypes.idequipmentTypes = Item.EquipType ";
@@ -77,7 +94,7 @@
 	echo "<br>";
 
 
-	$query .= "ORDER BY ItemID ASC";
+	$query .= "ORDER BY $sortBy ASC";
 	$result = mysqli_query($db, $query);
 	echo $query;
 	if(!$result) {
@@ -99,12 +116,15 @@
 <form action="mainMenu.php" method="get">
 	Type: 
     <select name="type">
-    	<option value="all" selected="selected"> All </option>
+    	<option value="all"> All </option>
         <?php
         while($equipmenClasstType = mysqli_fetch_row($allClassEquipment)) { 
                 				?>			
                 <option value="<?php 
 				echo "$equipmenClasstType[0]\" ";
+				if(isset($_GET["type"]) && $equipmenClasstType[0] == $_GET["type"]) {
+					echo "selected";
+				};
 				echo " \> $equipmenClasstType[0]"; 
 				
 				?></option> 
@@ -118,10 +138,18 @@
     <br>
 	Condition:
     <select name="condition">
-    	 <option value="all" selected="selected"> All </option>
-         <option value="not" > Not Working</option>
-         <option value="working" > Working</option>
-     </select>
+    	 <option value="all"> All </option>
+		 <?php
+		 	$conditionArray = ["Not Working" => 0 , "Working" => 1];
+			foreach($conditionArray as $key => $val) {
+				echo "<option value=". $val;
+				if(isset($_GET["condition"]) && ($_GET["condition"]) != 'all' && $val == $_GET["condition"]){
+						echo " selected";	
+						}
+				echo "> $key </option>";
+			};
+?>
+ 	</select>
     
     <br>
 
@@ -133,6 +161,9 @@
                 				?>			
                 <option value="<?php 
 				echo "$location[0]\" ";
+				if(isset($_GET["location"]) && $location[0] == $_GET["location"]){
+					echo "selected";	
+				};
 				echo " \> $location[0]"; 
 				
 				?></option> 
@@ -140,8 +171,24 @@
             };
 		mysqli_free_result($location);
         ?>
-    
+
     </select>
+    <br />
+    Sory by:
+    <select name="sortBy">
+	<?php
+    	foreach($queryArray as $displayName => $SQLName){
+		echo "<option value=$SQLName";
+		if(isset($_GET["sortBy"]) && $SQLName == $_GET["sortBy"]){
+			echo " selected";
+		}
+		echo "> $displayName </option>";
+		}
+	?>
+    </select>
+    
+    <br />
+    Debug
     <?php
         print_r($_GET);
     ?>
@@ -153,15 +200,13 @@
 <table width="1000" border="1">
   <tbody>
     <tr>
-      <th>ID </th>
-
-      <th>Friendly Name</th>
-      <th>Manufacture</th>
-      <th>Model</th>
-      <th>Description</th>
-      <th>Condition </th>
-      <th>Location </th>
-      <th>More Information </th>
+    <?php
+		foreach($queryArray as $displayName => $SQLName) {
+		echo "<th>$displayName</th>";
+		}
+	?>
+  
+	<th>More Information </th>
 
 
 	<?php

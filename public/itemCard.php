@@ -1,17 +1,5 @@
+<?php include("../includes/header.php"); ?>
 <?php
-// make connections
-
-	$dbHost = "localhost";
-	$dbUser = "equipment";
-	$dbPass = "equipment";
-	$dbName = "Equipment";
-	$db = mysqli_connect($dbHost, $dbUser, $dbPass, $dbName);
-	
-	if(mysqli_connect_errno()) {
-		die("Error connecting to database: " . mysqli_connect_error . 
-		mysqli_connect_errno);	
-	}; 
-
 //---------
 
 	echo $_GET["card"];
@@ -61,9 +49,24 @@
 	print_r($features);
 	
 	
+	
 	echo "Card Queury: $cardQuery <br>";
 	print_r($card);
-
+// Get Queury of the documentation
+	$documentationQueury = "SELECT ";
+	$documentationQueury .= "type, ";
+	$documentationQueury .= "fileName, ";
+	$documentationQueury .= "documentName ";
+	$documentationQueury .= "FROM Documentation_has_Item ";
+	$documentationQueury .= "INNER JOIN Documentation ";
+	$documentationQueury .= "ON document_id = idDocumentation ";
+	$documentationQueury .= "WHERE ";
+	$documentationQueury .= "item_id = " . $_GET["card"] . " ";
+	echo $documentationQueury;
+	$documentationResult = mysqli_query($db, $documentationQueury);
+	if(!$documentationResult) {
+		die("Database error");
+	}
 ?>
 
 <!doctype html>
@@ -126,6 +129,21 @@
 	  ?> 
       </ul>
       </td>
+      <tr>
+      	<td>Documentation</td>
+        <td>
+        <ul>
+		<?php
+			while($document = mysqli_fetch_assoc($documentationResult)){
+			echo "<li>";
+			echo "<a href=\"../files/" . $document["type"] . "/" .  $document["fileName"] . "\"> ";
+			echo $document["documentName"] . "</a>";
+			echo "</li>";
+			}
+		?>
+        </ul>
+		</td>
+      </tr>
     </tr>
   </tbody>
 </table>
