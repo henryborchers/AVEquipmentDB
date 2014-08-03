@@ -5,20 +5,20 @@
 // Equipment class
 	if(!isset($_GET["type"]) or $_GET["type"] == 'all') {
 	}else{
-		$whereClause[] = "Class = \"" . $_GET["type"] . "\"";		
+		$whereClause[] = "Class = \"" . urldecode($_GET["type"]) . "\"";		
 	};	
 
 // Condition
 	if(!isset($_GET["condition"]) or $_GET["condition"] == 'all') {
 	}else{
 //		$whereClause[] = 'Working = ' . ($_GET["condition"] == "not" ? '0' : '1');
-		$whereClause[] = 'Working = ' . $_GET["condition"];
+		$whereClause[] = 'Working = ' . urldecode($_GET["condition"]);
 	
 	};	
 // Location
 	if(!isset($_GET["location"]) or $_GET["location"] == 'all') {
 	} else {
-		$whereClause[] = "LocationName = \"" . $_GET["location"] . "\"";
+		$whereClause[] = "LocationName = \"" . urldecode($_GET["location"]) . "\"";
 	};
 	
 // Sort by
@@ -113,93 +113,97 @@
 </head>
 
 <body>
-<div>
-<h1> Equipment List </h1>
-<form action="mainMenu.php" method="get">
-	<table id= "search">
-    	<tr>
-    		<th> Type: </th>
-            <td> 
-    			<select name="type">
-    				<option value="all"> All </option>
-					<?php
-						while($equipmenClasstType = mysqli_fetch_row($allClassEquipment)) { 
-							echo "<option value=";
-							echo "$equipmenClasstType[0]\" ";
-							if(isset($_GET["type"]) && $equipmenClasstType[0] == $_GET["type"]) {echo "selected";}
-							echo " \> $equipmenClasstType[0]"; 
-						};
-						echo "</option>";
-	                    mysqli_free_result($allClassEquipment);
-                    ?>
-		    	</select> 
-            </td>
-		</tr>
-		<tr> 
-        	<th>Condition: </th>
-            <td>
-                <select name="condition">
-                     <option value="all"> All </option>
-                     <?php
-                        $conditionArray = ["Not Working" => 0 , "Working" => 1];
-                        foreach($conditionArray as $key => $val) {
-                            echo "<option value=". $val;
-                            if(isset($_GET["condition"]) && ($_GET["condition"]) != 'all' && $val == $_GET["condition"]){ echo " selected";};
-                            echo "> $key </option>";
-                        };
-                    ?>
-                </select>        
-            </td>
-		</tr>
-    	<tr>
-        	<th>Location:</th>
-    		<td>
-                <select name ="location">
-                    <option value="all"> All </option>
-                    <?php
-						while($location = mysqli_fetch_row($allLocations)) { 		
-								echo "<option value=\"";
-								echo "$location[0]\" ";
-								if(isset($_GET["location"]) && $location[0] == $_GET["location"]){echo "selected";};
-								echo " \> $location[0]"; 
-								echo "</option>"; 
-							};
-						mysqli_free_result($allLocations);
-                    ?>
-				    </select>
-			</td>
-    	</tr>
-        <tr>
-        	<th>Sort by:</th>
-            <td>
-                <select name="sortBy">
-                <?php
-                    foreach($queryArray as $displayName => $SQLName){
-                    echo "<option value=$SQLName";
-                    if(isset($_GET["sortBy"]) && $SQLName == $_GET["sortBy"]){
-                        echo " selected";
-                    }
-                    echo "> $displayName </option>";
-                    }
-                ?>
-                </select>
-        	</td>
-		</tr>
-        <tr>
-        	<th> </th>
-        	<td>
-            	<input type="submit" name="submit" value="Search">
-            </td>
-        </tr>
-	</table>
-</form>
+<div id="background">
+<h1> Equipment Inventory </h1>
+    <form action="mainMenu.php" method="get" id="formStyle">
+        <div id="searchBox">
+            <h3>Search</h3>
+            <table id= "search">
+                <tr>
+                    <th width="100"> Type: </th>
+                    <td width="400"> 
+                        <select name="type">
+                            <option value="all"> All </option>
+                            <?php
+                                while($equipmenClasstType = mysqli_fetch_row($allClassEquipment)) { 
+                                    echo "<option value=\"";
+                                    echo "$equipmenClasstType[0]\"" ;
+                                    if(isset($_GET["type"]) && $equipmenClasstType[0] == $_GET["type"]){echo "selected";};
+                                    echo " \> $equipmenClasstType[0]"; 
+                                    echo "</option>";
+                                };
+                                
+                                mysqli_free_result($allClassEquipment);
+                            ?>
+                        </select> 
+                    </td>
+                </tr>
+                <tr> 
+                    <th>Condition: </th>
+                    <td>
+                        <select name="condition">
+                             <option value="all"> All </option>
+                             <?php
+                                $conditionArray = ["Not Working" => 0 , "Working" => 1];
+                                foreach($conditionArray as $key => $val) {
+                                    echo "<option value=". $val;
+                                    if(isset($_GET["condition"]) && ($_GET["condition"]) != 'all' && $val == $_GET["condition"]){ echo " selected";};
+                                    echo "> $key </option>";
+                                };
+                            ?>
+                        </select>        
+                    </td>
+                </tr>
+                <tr>
+                    <th>Location:</th>
+                    <td>
+                        <select name ="location">
+                            <option value="all"> All </option>
+                            <?php
+                                while($location = mysqli_fetch_row($allLocations)) { 		
+                                        echo "<option value=\"";
+                                        echo "$location[0]\" ";
+                                        if(isset($_GET["location"]) && $location[0] == $_GET["location"]){echo "selected";};
+                                        echo " \> $location[0]"; 
+                                        echo "</option>"; 
+                                    };
+                                mysqli_free_result($allLocations);
+                            ?>
+                            </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Sort by:</th>
+                    <td>
+                        <select name="sortBy">
+                        <?php
+                            foreach($queryArray as $displayName => $SQLName){
+                            echo "<option value=$SQLName";
+                            if(isset($_GET["sortBy"]) && $SQLName == $_GET["sortBy"]){
+                                echo " selected";
+                            }
+                            echo "> $displayName </option>";
+                            }
+                        ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th> </th>
+                    <td>
+                        <input type="submit" name="submit" value="Search">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+
 <br />
 Debug
 <?php
 	print_r($_GET);
 ?>
 
-</div>
 <div id="dataTable">-
   <h2>Results</h2>
 <table id = "dataList">
@@ -207,7 +211,19 @@ Debug
     <tr>
     <?php
 		foreach($queryArray as $displayName => $SQLName) {
-		echo "<th>$displayName</th>";
+			echo "<th";
+			if($displayName=='Location') {
+				echo " style=\"width:200\">$displayName</div>"; 
+			} elseif($displayName=='Friendly Name') {
+				echo " style=\"width:100\"> $displayName</div>"; 
+
+			} elseif($displayName=='ID') {
+				echo " style=\"width:20\"> $displayName</div>"; 
+
+			} else {
+			echo ">". $displayName;
+			}
+			echo "</th> \n";
 		}
 	?>
   
@@ -239,6 +255,7 @@ Debug
       </tbody>
 
 </table>
+</div>
 </div>
 </body>
 </html>

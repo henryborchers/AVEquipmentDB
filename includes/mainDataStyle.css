@@ -1,20 +1,29 @@
 @charset "utf-8";
 /* CSS Document */
-div {
+h1, h2 {
+	padding: 10px;
+}
+
+#background {
 	border: 1px solid black;
-	width: 1000px;
-	background-color: #DBB84D;
+	background-color: #FFFFB2;
 }
 #dataTable table, th, td {
    border: 1px solid black;
    border-collapse: collapse;
    padding: 5px;
-   width: 1000px;
+   width: 100%;
+   
 }
 
 #dataList th{
     background-color: #780000;
     color: white;
+}
+
+#dataList {
+   table-layout:fixed;
+   
 }
 #dataList tr:nth-child(even) {
     background-color: #FFF0B2;
@@ -29,7 +38,9 @@ div {
 #card div {
 	width: 200;	
 }
-
+#dataitemList {
+	border-collapse: collapse;	
+}
 #dataItemList th {
 	width: 30px;
 	text-align:left;
@@ -51,24 +62,36 @@ div {
 
 #search {
 	padding: 10px;
-	border-style: hidden;
-	table-layout: fixed;
-	width: 200;
+	border-style:none;
+	border-collapse: collapse;
+	
 }
 #search th {
 	
 	width: 100px;
 	text-align:left;
+	padding: 5px;
 	background-color: #780000;
     color: white;
-	border-style: hidden;
 }
-
 #search td {
 	width: 300px;
-	border-style: hidden;
+	background-color: white;	
 }
 
 #search select {
-	width: 100%;	
+	width: 100%;
+}
+
+#searchBox {
+	 width: 400px;
+	 border-style:solid;
+	 border-width:1;
+	 background-color: #780000;
+	 padding : 5px;	
+	 color: white;
+}
+
+#formStyle {
+	display:inline;	
 }
