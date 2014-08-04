@@ -1,5 +1,5 @@
 <?php include("../includes/header.php"); ?>
-<?php include ("../includes/fuctions.php");?>
+<?php include_once ("../includes/functions.php");?>
 <?php
 //---------
 	if(!isset($_GET["card"])){
@@ -26,6 +26,8 @@
 	$documentationResult = getDocumentation($_GET["card"]);
 // Get a query of all attachements
 	$attachmentsResult = getAttachements($_GET["card"],"public");
+// Get Item Notes
+	$itemNotesResults = getItemNotes($_GET["card"],"public");
 ?>
 
 <!doctype html>
@@ -37,51 +39,51 @@
 </head>
 
 <body>
-<div id="card" style="width:800px">
+<div class="card">
 <h1>Equipment Record</h1>
 
-<table id = "dataItemList" border="1">
+<table class="dataTable">
   <tbody>
-    <tr>
-      <th>Item Number:</td>
-      <td><?php echo $_GET["card"]?></td>
+    <tr class="dataTable">
+      <th class="dataTable">Item Number:</td>
+      <td class="dataTable"><?php echo $_GET["card"]?></td>
     </tr>
-    <tr>
-      <th>Friendly Name:</td>
-      <td> <?php echo $card["Friendly_name"]; ?> </td>
+    <tr class="dataTable">
+      <th class="dataTable">Friendly Name:</td>
+      <td class="dataTable"> <?php echo $card["Friendly_name"]; ?> </td>
     </tr>
-    <tr>
-      <th>Manufacture:</td>
-      <td><?php echo $card["Company_Name"]; ?></td>
+    <tr class="dataTable">
+      <th class="dataTable">Manufacture:</td>
+      <td class="dataTable"><?php echo $card["Company_Name"]; ?></td>
     </tr>
     
-    <tr>
-      <th>Model Name:</td>
-      <td><?php echo $card["Model"]; ?> </td>
+    <tr class="dataTable">
+      <th class="dataTable">Model Name:</td>
+      <td class="dataTable"><?php echo $card["Model"]; ?> </td>
     </tr>
-     <tr>
-      <th>Serial Number:</td>
-      <td><?php echo $card["Serial_Number"]; ?> </td>
+     <tr class="dataTable">
+      <th class="dataTable">Serial Number:</td>
+      <td class="dataTable"><?php echo $card["Serial_Number"]; ?> </td>
     </tr>
-     <tr>
-      <th>Type:</td>
-      <td> <?php echo $card["EquipType"]; ?> </td>
+     <tr class="dataTable">
+      <th class="dataTable">Type:</td>
+      <td class="dataTable"> <?php echo $card["EquipType"]; ?> </td>
     </tr>
-    <tr>
-      <th>Professional/Consumer:</td>
-      <td><?php echo $card["Consumer_Professional"]; ?> </td>
+    <tr class="dataTable">
+      <th class="dataTable">Professional/Consumer:</td>
+      <td class="dataTable"><?php echo $card["Consumer_Professional"]; ?> </td>
     </tr>
-    <tr>
-      <th>Current Location:</td>
-      <td><?php echo $card["LocationName"]; ?> </td>
+    <tr class="dataTable">
+      <th class="dataTable">Current Location:</td>
+      <td class="dataTable"><?php echo $card["LocationName"]; ?> </td>
     </tr>
-    <tr>
-      <th>Working Status:</td>
-      <td><?php echo ($card["Working"]==0) ? "Not Working": "Working"; ?> </td>
+    <tr class="dataTable">
+      <th class="dataTable">Working Status:</td>
+      <td class="dataTable"><?php echo ($card["Working"]==0) ? "Not Working": "Working"; ?> </td>
     </tr>
-    <tr>
-    	<th>Connections</th>
-        <td> 
+    <tr class="dataTable">
+    	<th class="dataTable">Connections:</th>
+        <td class="dataTable"> 
         	<ul>
         		<?php
 					while($connection = mysqli_fetch_assoc($connectionResult)){
@@ -92,8 +94,8 @@
 				?>
         	</ul>
         </tr>
-    <tr>
-      <th>Features:</td>
+    <tr class="dataTable">
+      <th class="dataTable">Features:</td>
       <td> 
       <ul>
 	  <?php 
@@ -103,8 +105,8 @@
 	  ?> 
       </ul>
       </td>
-      <tr>
-      	<th>Documentation</td>
+      <tr class="dataTable">
+      	<th class="dataTable">Documentation:</td>
         <td>
         <ul>
 		<?php
@@ -118,9 +120,9 @@
         </ul>
 		</td>
     </tr>
-    <tr>
-      	<th> Attachments </th>
-       	<td> 
+    <tr class="dataTable">
+      	<th class="dataTable"> Attachments: </th>
+       	<td class="dataTable"> 
         	<ul>
             	<?php
 					while($attachement = mysqli_fetch_assoc($attachmentsResult)) {
@@ -136,6 +138,32 @@
             </ul>
         </td> 
  	</tr>
+    <tr class="dataTable">
+    	<th class="dataTable">Notes:</th>
+        <td class="dataTable">
+        	<table class="notesTable">
+            	  <colgroup
+                	<col class="noteDate">
+                </colgroup>
+                <tbody>
+              
+			<?php
+				while($itemNotes = mysqli_fetch_assoc($itemNotesResults)) {
+				echo "<tr> ";
+				echo "<td class=\"noteDate\">"; 
+				echo $itemNotes["Date"] . " :";
+				echo "</td>";
+				echo "<td>";
+				echo $itemNotes["Notes"];
+				echo "</td> ";
+				echo "</td> </tr>";
+				
+				}
+			?>
+			</tbody>
+		</table>
+        </td>
+    </tr>
         
   </tbody>
 </table>

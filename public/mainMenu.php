@@ -1,5 +1,5 @@
 <?php include("../includes/header.php"); ?>
-<?php include("../includes/fuctions.php");?>
+<?php include_once("../includes/functions.php");?>
 <?php
 // check the data incoming from the Submit 
 	$whereClause = array();
@@ -111,16 +111,17 @@
 </head>
 
 <body>
-<div id="background">
+<div class="background">
 <h1> Equipment Inventory </h1>
-    <form action="mainMenu.php" method="get" id="formStyle">
-        <div id="searchBox">
+<div>
+    <form action="mainMenu.php" method="get">
+        <div>
             <h3>Search</h3>
-            <table id= "search">
+            <table class="dataTable">
                 <tr>
-                    <th width="100"> Type: </th>
-                    <td width="400"> 
-                        <select name="type">
+                    <th class="dataTable" width="100"> Type: </th>
+                    <td class="dataTable" width="200"> 
+                        <select class="dataTable" name="type">
                             <option value="all"> All </option>
                             <?php
                                 while($equipmenClasstType = mysqli_fetch_row($allClassEquipment)) { 
@@ -137,9 +138,9 @@
                     </td>
                 </tr>
                 <tr> 
-                    <th>Condition: </th>
-                    <td>
-                        <select name="condition">
+                    <th class="dataTable">Condition: </th>
+                    <td class="dataTable">
+                        <select class="dataTable"name="condition">
                              <option value="all"> All </option>
                              <?php
                                 $conditionArray = ["Not Working" => 0 , "Working" => 1];
@@ -153,9 +154,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Location:</th>
-                    <td>
-                        <select name ="location">
+                    <th class="dataTable">Location:</th>
+                    <td class="dataTable">
+                        <select class="dataTable" name ="location">
                             <option value="all"> All </option>
                             <?php
                                 while($location = mysqli_fetch_row($allLocations)) { 		
@@ -171,9 +172,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Sort by:</th>
-                    <td>
-                        <select name="sortBy">
+                    <th class="dataTable">Sort by:</th>
+                    <td class="dataTable">
+                        <select class="dataTable" name="sortBy">
                         <?php
                             foreach($queryArray as $displayName => $SQLName){
                             echo "<option value=$SQLName";
@@ -187,7 +188,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th> </th>
+                    <th class="dataTable"> </th>
                     <td>
                         <input type="submit" name="submit" value="Search">
                     </td>
@@ -197,31 +198,32 @@
     </form>
 
 <br />
-<div id="dataTable">-
+<div\>
   <h2>Results</h2>
-<table id = "dataList">
-  <tbody>
-    <tr>
+<table class="dataTable">
+	<colgroup>
+    	<col class="dataTable">
+        <col class="dataTable">
+        <col class="dataTable">
+        <col class="dataTable">
+        <col class="dataTable">
+        <col class="dataTable">
+        <col class="dataTable">
+    </colgroup>
+  <thead>
+  <tr>
     <?php
 		foreach($queryArray as $displayName => $SQLName) {
-			echo "<th";
-			if($displayName=='Location') {
-				echo " style=\"width:200\">$displayName</div>"; 
-			} elseif($displayName=='Friendly Name') {
-				echo " style=\"width:100\"> $displayName</div>"; 
-
-			} elseif($displayName=='ID') {
-				echo " style=\"width:25\"> $displayName</div>"; 
-
-			} else {
-			echo ">". $displayName;
-			}
+			echo "<th class=\"dataTable\">";
+			echo $displayName;
+//			}
 			echo "</th> \n";
 		}
 	?>
-  
-	<th>More Information </th>
-
+	<th class="dataTable">More Information </th>
+    </tr>
+ </thead>
+ <tbody>
 
 	<?php
 //Build the table
@@ -229,7 +231,7 @@
 			?>
             
             <?php
-			echo "<tr>";
+			echo "<tr class=\"dataTable\">";
 				echo "<td>" . $row["ItemID"] . "</td>";
 				echo "<td>" .$row["Friendly_Name"] . "</td>";
 				echo "<td>" .$row["Company_Name"] . "</td>";

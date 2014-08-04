@@ -1,41 +1,56 @@
 @charset "utf-8";
 /* CSS Document */
+
 h1, h2 {
 	padding: 10px;
 }
 
-#background {
+.background {
 	border: 1px solid black;
 	background-color: #FFFFB2;
 }
-#dataTable table, th, td {
-   border: 1px solid black;
-   border-collapse: collapse;
-   padding: 5px;
-   width: 100%;
+.dataTable{
+	
+   	
+	background-color:FFFFD1;
+   	padding: 5px;
+	border-collapse: collapse;
+	border: 1px solid black;
    
 }
 
-#dataList th{
-    background-color: #780000;
-    color: white;
+th.dataTable{
+	background-color: #780000;
+	border:hidden;
+	color:white;	
 }
 
-#dataList {
+.noteDate{
+    width:150px;
+	vertical-align:text-top;
+}
+select.dataTable
+{
+	width:100%;
+	padding:0;
+	background-color:white;
+e;
+}
+*/#dataList {
    table-layout:fixed;
    
 }
-#dataList tr:nth-child(even) {
+tr:nth-child(even).dataTable  {
     background-color: #FFF0B2;
     color: black;
 }
-#dataList tr:nth-child(odd) {
+tr:nth-child(odd).dataTable {
     background-color: #FFFFD1;
     color: black;
 
 }
 
-#card div {
+div.card {
 	width: 200;	
 }
 #dataItemList {
@@ -95,4 +110,14 @@ h1, h2 {
 
 #formStyle {
 	display:inline;	
+}
+
+#dateNote {
+	width: 10px;
+}
+
+.notesTable{
+	table-layout:fixed;
+	border-collapse:collapse;
+	border:hidden;
 }
