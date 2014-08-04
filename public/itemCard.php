@@ -1,44 +1,19 @@
 <?php include("../includes/header.php"); ?>
+<?php include ("../includes/fuctions.php");?>
 <?php
 //---------
-// TODO: figure out why I can't remove the following line without breaking it
-	$dummy = $_GET["card"];
-	$cardQuery = "SELECT ";
-	$cardQuery .= "Friendly_name, ";
-	$cardQuery .= "Company_Name, ";
-	$cardQuery .= "Model, ";
-	$cardQuery .= "Serial_Number, ";
-	$cardQuery .= "equipmentTypes.Item AS EquipType, ";
-	$cardQuery .= "LocationName, ";
-	$cardQuery .= "Working, ";
-	$cardQuery .= "Consumer_Professional ";
-	$cardQuery .= "FROM Item ";
-	$cardQuery .=  "INNER JOIN Manufacture ON Manufacture.ManufactureID = Item.Manufacture_ManufactureID ";
-	$cardQuery .=  "INNER JOIN Location ON Location.LocationID = Item.Location_LocationID ";
-	$cardQuery .= "INNER JOIN equipmentTypes ON equipmentTypes.idequipmentTypes = Item.EquipType ";
-	$cardQuery .= "WHERE ";
-	$cardQuery .= "ItemID LIKE " . $_GET["card"] . " ";
-	$cardResult = mysqli_query($db, $cardQuery);
-	if(!$cardResult) {
-		die("Database error");	
+	if(!isset($_GET["card"])){
+		$_GET["card"] = 40;
 	}
+	// TODO: figure out why I can't remove the following line without breaking it
+
+	$dummy = $_GET["card"];
+	
+	$cardResult = getCardInfo($_GET["card"]);
 	$card = mysqli_fetch_assoc($cardResult);
 	mysqli_free_result($cardResult);
 	
-	$cardFeaturesQuery = "SELECT ";
-	$cardFeaturesQuery .= "CONCAT_WS(' ', Class , ': ', Value, Unit) ";
-	$cardFeaturesQuery .= "FROM ";
-	$cardFeaturesQuery .= "Atributes_has_Item ";
-	$cardFeaturesQuery .= "INER JOIN ";
-	$cardFeaturesQuery .= "Atributes ";
-	$cardFeaturesQuery .= "ON ";
-	$cardFeaturesQuery .= "Atributes_id = idAtributes ";
-	$cardFeaturesQuery .= "WHERE ";
-	$cardFeaturesQuery .= "Item_ItemID LiKE " . $_GET["card"] . " ";
-	$cardFeaturesResults = mysqli_query($db, $cardFeaturesQuery);
-	if(!$cardFeaturesResults) {
-		die("Database error");	
-	}
+	$cardFeaturesResults = getCardFeatures($_GET["card"]);
 	$features = array();
 	while($row = mysqli_fetch_array($cardFeaturesResults)){
 		$features[] = $row[0];
@@ -46,42 +21,11 @@
 	mysqli_free_result($cardFeaturesResults);
 	
 // get query of connections
-	$connectionQuery = "SELECT ";
-	$connectionQuery .="ItemID, ";
-	$connectionQuery .="Class, ";
-	$connectionQuery .="ConnectorType, ";
-	$connectionQuery .="CONCAT_WS(' ', '(',Quanity,')', ConnectorType) AS connections ";
-	$connectionQuery .="FROM ";
-	$connectionQuery .="ConnectorJoinTable ";
-	$connectionQuery .="INNER JOIN ";
-	$connectionQuery .="Connectors ";
-	$connectionQuery .="ON ";
-	$connectionQuery .="Connectors.Connectors_ID = ConnectorJoinTable.ConnectorID " ;
-	$connectionQuery .="WHERE ";
-	$connectionQuery .="ItemID = ";
-	$connectionQuery .=$_GET["card"] . " ";
-	$connectionQuery .="ORDER BY Class, ConnectorType";
-	echo $connectionQuery;
-	
-	$connectionResult = mysqli_query($db, $connectionQuery);
-	if(!$connectionResult) {
-		die("Database error");
-	}
-	
+	$connectionResult = getConnections($_GET["card"]);
 // Get Queury of the documentation
-	$documentationQuery = "SELECT ";
-	$documentationQuery .= "type, ";
-	$documentationQuery .= "fileName, ";
-	$documentationQuery .= "documentName ";
-	$documentationQuery .= "FROM Documentation_has_Item ";
-	$documentationQuery .= "INNER JOIN Documentation ";
-	$documentationQuery .= "ON document_id = idDocumentation ";
-	$documentationQuery .= "WHERE ";
-	$documentationQuery .= "item_id = " . $_GET["card"] . " ";
-	$documentationResult = mysqli_query($db, $documentationQuery);
-	if(!$documentationResult) {
-		die("Database error");
-	}
+	$documentationResult = getDocumentation($_GET["card"]);
+// Get a query of all attachements
+	$attachmentsResult = getAttachements($_GET["card"],"public");
 ?>
 
 <!doctype html>
@@ -93,9 +37,10 @@
 </head>
 
 <body>
-<div id="card">
+<div id="card" style="width:800px">
 <h1>Equipment Record</h1>
-<table id = "dataitemList" border="1">
+
+<table id = "dataItemList" border="1">
   <tbody>
     <tr>
       <th>Item Number:</td>
@@ -147,7 +92,6 @@
 				?>
         	</ul>
         </tr>
-    </tr>
     <tr>
       <th>Features:</td>
       <td> 
@@ -166,15 +110,33 @@
 		<?php
 			while($document = mysqli_fetch_assoc($documentationResult)){
 			echo "<li>";
-			echo "<a href=\"../files/" . $document["type"] . "/" .  $document["fileName"] . "\"> ";
+			echo "<a href=\"../files/" . $document["type"] . "/" .  $document["fileName"] . "\" target=\"_blank\"> ";
 			echo $document["documentName"] . "</a>";
 			echo "</li>";
 			}
 		?>
         </ul>
 		</td>
-      </tr>
     </tr>
+    <tr>
+      	<th> Attachments </th>
+       	<td> 
+        	<ul>
+            	<?php
+					while($attachement = mysqli_fetch_assoc($attachmentsResult)) {
+						
+						echo "<li>";
+						echo ucwords($attachement["class"]) . ": ";
+						echo "<a href=\"../files/" . $attachement["class"] . "/". $attachement["filename"] . "\" target=\"_blank\">". $attachement["attachmentName"] . "</a>";
+						echo "</li>";
+					}
+					mysqli_free_result($attachmentsResult);
+				?>
+            
+            </ul>
+        </td> 
+ 	</tr>
+        
   </tbody>
 </table>
 

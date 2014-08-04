@@ -38,8 +38,9 @@ h1, h2 {
 #card div {
 	width: 200;	
 }
-#dataitemList {
+#dataItemList {
 	border-collapse: collapse;	
+	
 }
 #dataItemList th {
 	width: 30px;

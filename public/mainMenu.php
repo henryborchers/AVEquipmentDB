@@ -1,4 +1,5 @@
 <?php include("../includes/header.php"); ?>
+<?php include("../includes/fuctions.php");?>
 <?php
 // check the data incoming from the Submit 
 	$whereClause = array();
@@ -45,9 +46,8 @@
 	$locationQuery .= "LocationName ";
 	$locationQuery .= "FROM Location";
 	$allLocations = mysqli_query($db, $locationQuery);
-	if(!$allLocations) {
-		die("Database error: No locations found");
-	}
+	confirmQuery($allLocations);
+
 	// get query of equipment types
 	$equipmentClassQuery = "SELECT ";
 	$equipmentClassQuery .= "DISTINCT(Class) ";
@@ -97,10 +97,8 @@
 	$query .= "ORDER BY $sortBy ASC";
 	$result = mysqli_query($db, $query);
 	echo $query;
-	if(!$result) {
-		die("Database error");	
-	}
-?>
+	confirmQuery($result);
+	?>
 
 
 
@@ -199,11 +197,6 @@
     </form>
 
 <br />
-Debug
-<?php
-	print_r($_GET);
-?>
-
 <div id="dataTable">-
   <h2>Results</h2>
 <table id = "dataList">
@@ -218,7 +211,7 @@ Debug
 				echo " style=\"width:100\"> $displayName</div>"; 
 
 			} elseif($displayName=='ID') {
-				echo " style=\"width:20\"> $displayName</div>"; 
+				echo " style=\"width:25\"> $displayName</div>"; 
 
 			} else {
 			echo ">". $displayName;
@@ -245,7 +238,7 @@ Debug
 				echo "<td>" . (($row["Working"]==1) ? "Working" : "Not Working"). "</td>";
 //				echo "<td>" .$row["Serial_Number"] . "</td>";
 				echo "<td>" .$row["LocationName"] . "</td>";
-				echo "<td> <a href=\"itemCard.php?card=" . $row["ItemID"] . "\"> More info </a> </td>";
+				echo "<td> <a href=\"itemCard.php?card=" . $row["ItemID"] . "\" . > More info </a> </td>";
 			echo "</tr>";	
 			?> 
             <?php
