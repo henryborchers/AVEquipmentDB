@@ -65,25 +65,28 @@
 
 	
 	// get query of Equipment	
-	$query = "SELECT ";
+	
+	$equipmentQuery = "SELECT ";
 	foreach($queryArray as $displayName => $SQLName) {
-		$query .= $SQLName . ", ";	
+		$equipmentQuery .= $SQLName . ", ";	
 	};
-	$query = substr($query, 0, -2);
-	$query .= " FROM Item "; 
-	$query .=  "INNER JOIN Manufacture ON Manufacture.ManufactureID = Item.Manufacture_ManufactureID ";
-	$query .=  "INNER JOIN Location ON Location.LocationID = Item.Location_LocationID ";
-	$query .= "INNER JOIN equipmentTypes ON equipmentTypes.idequipmentTypes = Item.EquipType ";
+	$equipmentQuery = substr($equipmentQuery, 0, -2);
+	$equipmentQuery .= ", ";
+	$equipmentQuery .= "Manufacture_ManufactureID ";
+	$equipmentQuery .= "FROM Item "; 
+	$equipmentQuery .=  "INNER JOIN Manufacture ON Manufacture.ManufactureID = Item.Manufacture_ManufactureID ";
+	$equipmentQuery .=  "INNER JOIN Location ON Location.LocationID = Item.Location_LocationID ";
+	$equipmentQuery .= "INNER JOIN equipmentTypes ON equipmentTypes.idequipmentTypes = Item.EquipType ";
 	// Build the where clause
 		if(count($whereClause) > 0 ){
-		$query .= "WHERE ";
-		$query .= $whereClause[0] . " ";
+		$equipmentQuery .= "WHERE ";
+		$equipmentQuery .= $whereClause[0] . " ";
 	}
 	if(count($whereClause) >1) { 
 		for($i=1; $i < count($whereClause); $i++)
 		{
-			$query .= "AND ";
-			$query .= $whereClause[$i] . " ";
+			$equipmentQuery .= "AND ";
+			$equipmentQuery .= $whereClause[$i] . " ";
 		}
 		echo "Large than 1";
 	} else {
@@ -94,9 +97,9 @@
 	echo "<br>";
 
 
-	$query .= "ORDER BY $sortBy ASC";
-	$result = mysqli_query($db, $query);
-	echo $query;
+	$equipmentQuery .= "ORDER BY $sortBy ASC";
+	$result = mysqli_query($db, $equipmentQuery);
+	echo $equipmentQuery;
 	confirmQuery($result);
 	?>
 
@@ -232,15 +235,20 @@
             
             <?php
 			echo "<tr class=\"dataTable\">";
-				echo "<td>" . $row["ItemID"] . "</td>";
-				echo "<td>" .$row["Friendly_Name"] . "</td>";
-				echo "<td>" .$row["Company_Name"] . "</td>";
-				echo "<td>" .$row["Model"] . "</td>";
-				echo "<td>" .$row["EquipType"] . "</td>";
-				echo "<td>" . (($row["Working"]==1) ? "Working" : "Not Working"). "</td>";
+				echo "<td class=\"dataTable\" >" . $row["ItemID"] . "</td>";
+				echo "<td class=\"dataTable\">" .$row["Friendly_Name"] . "</td>";
+				echo "<td class=\"dataTable\">";
+				echo "<a href=\"";
+				echo "companyCard.php?company=";
+				echo $row["Manufacture_ManufactureID"];
+				echo "\"> ";
+				echo $row["Company_Name"] . "</a></td>";
+				echo "<td class=\"dataTable\">" .$row["Model"] . "</td>";
+				echo "<td class=\"dataTable\">" .$row["EquipType"] . "</td>";
+				echo "<td class=\"dataTable\">" . (($row["Working"]==1) ? "Working" : "Not Working"). "</td>";
 //				echo "<td>" .$row["Serial_Number"] . "</td>";
-				echo "<td>" .$row["LocationName"] . "</td>";
-				echo "<td> <a href=\"itemCard.php?card=" . $row["ItemID"] . "\" . > More info </a> </td>";
+				echo "<td class=\"dataTable\">" .$row["LocationName"] . "</td>";
+				echo "<td class=\"dataTable\"> <a href=\"itemCard.php?card=" . $row["ItemID"] . "\" . > More info </a> </td>";
 			echo "</tr>";	
 			?> 
             <?php

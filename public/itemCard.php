@@ -39,11 +39,33 @@
 </head>
 
 <body>
-<div class="card">
+
 <h1>Equipment Record</h1>
+<div class="card">
 
 <table class="dataTable">
+	<colgroup>
+    <col class="cardNameWidth">
+    <col class="cardRecordWidth">
+    </colgroup>
   <tbody>
+    <?php
+		
+        
+			$displayPicture = getDisplayPicture($card["displayPicture"]);
+			if($displayPicture) {
+				echo "<tr class=\"dataTable\">";
+				echo "<th class=\"dataTable\">";
+        		echo "</th>";
+				echo "<td align=\"center\">";
+				echo "<img src=\"../files/image/". $displayPicture . "\" alt=\"Display image\">";
+				echo "</td>";
+				echo "</tr>";
+				}
+		
+		?>
+        
+
     <tr class="dataTable">
       <th class="dataTable">Item Number:</td>
       <td class="dataTable"><?php echo $_GET["card"]?></td>
@@ -54,7 +76,10 @@
     </tr>
     <tr class="dataTable">
       <th class="dataTable">Manufacture:</td>
-      <td class="dataTable"><?php echo $card["Company_Name"]; ?></td>
+      <td class="dataTable"> 
+      <a href=" <?php echo "companyCard.php?company=" . $card["ManufactureID"]?>">
+	  <?php echo $card["Company_Name"]; ?> </a> 
+      </td>
     </tr>
     
     <tr class="dataTable">
@@ -70,7 +95,7 @@
       <td class="dataTable"> <?php echo $card["EquipType"]; ?> </td>
     </tr>
     <tr class="dataTable">
-      <th class="dataTable">Professional/Consumer:</td>
+      <th class="dataTable">Professional/<wbr>Consumer:</td>
       <td class="dataTable"><?php echo $card["Consumer_Professional"]; ?> </td>
     </tr>
     <tr class="dataTable">
@@ -149,15 +174,14 @@
               
 			<?php
 				while($itemNotes = mysqli_fetch_assoc($itemNotesResults)) {
-				echo "<tr> ";
-				echo "<td class=\"noteDate\">"; 
-				echo $itemNotes["Date"] . " :";
-				echo "</td>";
-				echo "<td>";
-				echo $itemNotes["Notes"];
-				echo "</td> ";
-				echo "</td> </tr>";
-				
+					echo "<tr> ";
+					echo "<td class=\"noteDate\">"; 
+					echo $itemNotes["Date"] . " :";
+					echo "</td>";
+					echo "<td>";
+					echo $itemNotes["Notes"];
+					echo "</td> ";
+					echo "</td> </tr>";	
 				}
 			?>
 			</tbody>
@@ -167,9 +191,6 @@
         
   </tbody>
 </table>
-
- <br>
-
 
 </div>
 </body>

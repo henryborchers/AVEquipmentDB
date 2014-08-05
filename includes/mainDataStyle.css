@@ -4,6 +4,12 @@
 h1, h2 {
 	padding: 10px;
 }
+img, img.scale-with-grid { 
+	outline: 0; 
+	border:thin;
+	width: 100%; 
+	height: auto; 
+}
 
 .background {
 	border: 1px solid black;
@@ -12,7 +18,6 @@ h1, h2 {
 .dataTable{
 	
    	
-	background-color:FFFFD1;
    	padding: 5px;
 	border-collapse: collapse;
 	border: 1px solid black;
@@ -21,6 +26,7 @@ h1, h2 {
 
 th.dataTable{
 	background-color: #780000;
+	padding:10pz
 	border:hidden;
 	color:white;	
 }
@@ -29,16 +35,18 @@ th.dataTable{
     width:150px;
 	vertical-align:text-top;
 }
+td.dataTable{
+
+}
 select.dataTable
 {
 	width:100%;
 	padding:0;
 	background-color:white;
-e;
 }
-*/#dataList {
-   table-layout:fixed;
-   
+
+table.dataTable{
+	width:100%;	
 }
 tr:nth-child(even).dataTable  {
     background-color: #FFF0B2;
@@ -49,11 +57,20 @@ tr:nth-child(odd).dataTable {
     color: black;
 
 }
+.cardRecordWidth {
+	width:80%;
+}
+.cardNameWidth {
+	width: 20px;	
+}
 
 div.card {
-	width: 200;	
+	border:solid 2px;
+	margin:2px;
+	border-radius: 5px;
+	max-width:600px;	
 }
-#dataItemList {
+/*#dataItemList {
 	border-collapse: collapse;	
 	
 }
@@ -121,3 +138,4 @@ div.card {
 	border-collapse:collapse;
 	border:hidden;
 }
+*/
