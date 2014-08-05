@@ -13,7 +13,7 @@
 	if(!isset($_GET["condition"]) or $_GET["condition"] == 'all') {
 	}else{
 //		$whereClause[] = 'Working = ' . ($_GET["condition"] == "not" ? '0' : '1');
-		$whereClause[] = 'Working = ' . urldecode($_GET["condition"]);
+		$whereClause[] = 'working = ' . urldecode($_GET["condition"]);
 	
 	};	
 // Location
@@ -59,7 +59,7 @@
 					"Manufacture" => "Company_Name",
 					"Model" => "Model",
 					"Description" => "equipmentTypes.Item AS EquipType",
-					"Condition" => "Working",
+					"Condition" => "working",
 					"Location" => "LocationName"
 					];
 
@@ -72,7 +72,8 @@
 	};
 	$equipmentQuery = substr($equipmentQuery, 0, -2);
 	$equipmentQuery .= ", ";
-	$equipmentQuery .= "Manufacture_ManufactureID ";
+	$equipmentQuery .= "Manufacture_ManufactureID, ";
+	$equipmentQuery .= "Location_LocationID ";
 	$equipmentQuery .= "FROM Item "; 
 	$equipmentQuery .=  "INNER JOIN Manufacture ON Manufacture.ManufactureID = Item.Manufacture_ManufactureID ";
 	$equipmentQuery .=  "INNER JOIN Location ON Location.LocationID = Item.Location_LocationID ";
@@ -88,18 +89,13 @@
 			$equipmentQuery .= "AND ";
 			$equipmentQuery .= $whereClause[$i] . " ";
 		}
-		echo "Large than 1";
-	} else {
-		echo "1 or less ";
-	};
-	echo "Here's the where clause <br>";
-	print_r($whereClause);
-	echo "<br>";
+	}
+
 
 
 	$equipmentQuery .= "ORDER BY $sortBy ASC";
+	//echo $equipmentQuery;
 	$result = mysqli_query($db, $equipmentQuery);
-	echo $equipmentQuery;
 	confirmQuery($result);
 	?>
 
@@ -115,15 +111,15 @@
 
 <body>
 <div class="background">
-<h1> Equipment Inventory </h1>
-<div>
+<h1>Equipment Inventory</h1>
+<div class="searchBox">
     <form action="mainMenu.php" method="get">
-        <div>
-            <h3>Search</h3>
+        <div class="searchBox">
+            <h2>Search</h2>
             <table class="dataTable">
                 <tr>
-                    <th class="dataTable" width="100"> Type: </th>
-                    <td class="dataTable" width="200"> 
+                    <th class="dataTable" width="100px"> Type: </th>
+                    <td class="dataTable" width="200px"> 
                         <select class="dataTable" name="type">
                             <option value="all"> All </option>
                             <?php
@@ -235,19 +231,20 @@
             
             <?php
 			echo "<tr class=\"dataTable\">";
-				echo "<td class=\"dataTable\" >" . $row["ItemID"] . "</td>";
+				echo "<td class=\"dataTable\" >" . sprintf('%05d', $row["ItemID"]) . "</td>";
 				echo "<td class=\"dataTable\">" .$row["Friendly_Name"] . "</td>";
 				echo "<td class=\"dataTable\">";
-				echo "<a href=\"";
-				echo "companyCard.php?company=";
+				echo "<a href=\"companyCard.php?company=";
 				echo $row["Manufacture_ManufactureID"];
 				echo "\"> ";
 				echo $row["Company_Name"] . "</a></td>";
 				echo "<td class=\"dataTable\">" .$row["Model"] . "</td>";
 				echo "<td class=\"dataTable\">" .$row["EquipType"] . "</td>";
-				echo "<td class=\"dataTable\">" . (($row["Working"]==1) ? "Working" : "Not Working"). "</td>";
+				echo "<td class=\"dataTable\">" . $row["working"]. "</td>";
 //				echo "<td>" .$row["Serial_Number"] . "</td>";
-				echo "<td class=\"dataTable\">" .$row["LocationName"] . "</td>";
+				echo "<td class=\"dataTable\">";
+				echo "<a href=\"locationCard.php?Location=" . $row["Location_LocationID"] . "\" >";
+				echo $row["LocationName"] . "</a> </td>";
 				echo "<td class=\"dataTable\"> <a href=\"itemCard.php?card=" . $row["ItemID"] . "\" . > More info </a> </td>";
 			echo "</tr>";	
 			?> 

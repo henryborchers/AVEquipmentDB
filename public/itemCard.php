@@ -68,7 +68,7 @@
 
     <tr class="dataTable">
       <th class="dataTable">Item Number:</td>
-      <td class="dataTable"><?php echo $_GET["card"]?></td>
+      <td class="dataTable"><?php echo sprintf('%05d', $_GET["card"])?></td>
     </tr>
     <tr class="dataTable">
       <th class="dataTable">Friendly Name:</td>
@@ -100,11 +100,16 @@
     </tr>
     <tr class="dataTable">
       <th class="dataTable">Current Location:</td>
-      <td class="dataTable"><?php echo $card["LocationName"]; ?> </td>
+      <td class="dataTable">
+	        <a href=" <?php echo "locationCard.php?Location=" . $card["Location_LocationID"]?>">
+			<?php echo $card["LocationName"]; ?>
+            </a> 
+     </td>
+      
     </tr>
     <tr class="dataTable">
       <th class="dataTable">Working Status:</td>
-      <td class="dataTable"><?php echo ($card["Working"]==0) ? "Not Working": "Working"; ?> </td>
+      <td class="dataTable"><?php echo $card["working"]; ?> </td>
     </tr>
     <tr class="dataTable">
     	<th class="dataTable">Connections:</th>
