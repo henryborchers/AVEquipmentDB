@@ -1,7 +1,7 @@
 <?php include("../includes/header.php"); ?>
 <?php include_once("../includes/functions.php");?>
 <?php
-// check the data incoming from the Submit 
+// rebuild the data incoming from the Submit 
 	$whereClause = array();
 // Equipment class
 	if(!isset($_GET["type"]) or $_GET["type"] == 'all') {
@@ -13,8 +13,22 @@
 	if(!isset($_GET["condition"]) or $_GET["condition"] == 'all') {
 	}else{
 //		$whereClause[] = 'Working = ' . ($_GET["condition"] == "not" ? '0' : '1');
-		$whereClause[] = 'working = ' . urldecode($_GET["condition"]);
-	
+//		echo urldecode($_GET["condition"]);
+		switch($_GET["condition"]) {
+			case 0: {
+				$whereClause[] = "working = \"" . urldecode('Not Working') . "\"";
+				break;
+		}
+			case 1: {
+				$whereClause[] = "working = \"Working\"";
+				break;
+			}
+			case 2: {
+				$whereClause[] = "working = \"Unknown\"";
+				echo "hello";
+				break;
+			}
+		}
 	};	
 // Location
 	if(!isset($_GET["location"]) or $_GET["location"] == 'all') {

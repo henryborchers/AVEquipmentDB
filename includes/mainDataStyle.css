@@ -75,6 +75,34 @@ div.card {
 	border-radius: 5px;
 	max-width:600px;	
 }
+
+div.admin{
+	border: 1px solid black;
+	background-color: #FF6363;
+}
+
+div.newInput{
+	border: 1px solid black;
+	background-color: white;
+    width:500px;
+	margin-left: auto;
+  	margin-right: auto;
+  	border-radius: 10px;
+}
+	 
+form.newInput {
+	padding:10px;
+	font-weight: bold;
+	}
+input.newInput {
+	width:100%;
+	
+}
+
+lable.newInput {
+	
+}
+
 /*#dataItemList {
 	border-collapse: collapse;	
 	
