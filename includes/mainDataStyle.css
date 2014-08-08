@@ -103,6 +103,11 @@ lable.newInput {
 	
 }
 
+.error {
+	color:red;	
+	
+}
+
 /*#dataItemList {
 	border-collapse: collapse;	
 	
@@ -170,5 +175,9 @@ lable.newInput {
 	table-layout:fixed;
 	border-collapse:collapse;
 	border:hidden;
+}
+
+.error {
+	color: 	
 }
 */
