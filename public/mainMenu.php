@@ -125,151 +125,153 @@
 
 <body>
 <div class="background">
-<h1>Equipment Inventory</h1>
-<div class="searchBox">
-    <form action="mainMenu.php" method="get">
+    <h1>Equipment Inventory</h1>
+    <aside>
         <div class="searchBox">
-            <h2>Search</h2>
-            <table class="dataTable">
-                <tr>
-                    <th class="dataTable" width="100px"> Type: </th>
-                    <td class="dataTable" width="200px"> 
-                        <select class="dataTable" name="type">
-                            <option value="all"> All </option>
-                            <?php
-                                while($equipmenClasstType = mysqli_fetch_row($allClassEquipment)) { 
-                                    echo "<option value=\"";
-                                    echo "$equipmenClasstType[0]\"" ;
-                                    if(isset($_GET["type"]) && $equipmenClasstType[0] == $_GET["type"]){echo "selected";};
-                                    echo " \> $equipmenClasstType[0]"; 
-                                    echo "</option>";
-                                };
-                                
-                                mysqli_free_result($allClassEquipment);
-                            ?>
-                        </select> 
-                    </td>
-                </tr>
-                <tr> 
-                    <th class="dataTable">Condition: </th>
-                    <td class="dataTable">
-                        <select class="dataTable"name="condition">
-                             <option value="all"> All </option>
-                             <?php
-                                $conditionArray = ["Not Working" => 0 , "Working" => 1];
-                                foreach($conditionArray as $key => $val) {
-                                    echo "<option value=". $val;
-                                    if(isset($_GET["condition"]) && ($_GET["condition"]) != 'all' && $val == $_GET["condition"]){ echo " selected";};
-                                    echo "> $key </option>";
-                                };
-                            ?>
-                        </select>        
-                    </td>
-                </tr>
-                <tr>
-                    <th class="dataTable">Location:</th>
-                    <td class="dataTable">
-                        <select class="dataTable" name ="location">
-                            <option value="all"> All </option>
-                            <?php
-                                while($location = mysqli_fetch_row($allLocations)) { 		
+            <form action="mainMenu.php" method="get">
+                <table class="searchBox">
+                    <caption class="searchBox"> Search </caption>
+                    <tr>
+                        <th class="searchBox"> Type: </th>
+                        <td class="searchBox"> 
+                            <select class="searchBox" name="type">
+                                <option value="all"> All </option>
+                                <?php
+                                    while($equipmenClasstType = mysqli_fetch_row($allClassEquipment)) { 
                                         echo "<option value=\"";
-                                        echo "$location[0]\" ";
-                                        if(isset($_GET["location"]) && $location[0] == $_GET["location"]){echo "selected";};
-                                        echo " \> $location[0]"; 
-                                        echo "</option>"; 
+                                        echo "$equipmenClasstType[0]\"" ;
+                                        if(isset($_GET["type"]) && $equipmenClasstType[0] == $_GET["type"]){echo "selected";};
+                                        echo " \> $equipmenClasstType[0]"; 
+                                        echo "</option>";
                                     };
-                                mysqli_free_result($allLocations);
+
+                                    mysqli_free_result($allClassEquipment);
+                                ?>
+                            </select> 
+                        </td>
+                    </tr>
+                    <tr> 
+                        <th class="searchBox">Condition: </th>
+                        <td class="searchBox">
+                            <select class="searchBox"name="condition">
+                                 <option value="all"> All </option>
+                                 <?php
+                                    $conditionArray = ["Not Working" => 0 , "Working" => 1];
+                                    foreach($conditionArray as $key => $val) {
+                                        echo "<option value=". $val;
+                                        if(isset($_GET["condition"]) && ($_GET["condition"]) != 'all' && $val == $_GET["condition"]){ echo " selected";};
+                                        echo "> $key </option>";
+                                    };
+                                ?>
+                            </select>        
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="searchBox">Location:</th>
+                        <td class="searchBox">
+                            <select class="searchBox" name ="location">
+                                <option value="all"> All </option>
+                                <?php
+                                    while($location = mysqli_fetch_row($allLocations)) { 		
+                                            echo "<option value=\"";
+                                            echo "$location[0]\" ";
+                                            if(isset($_GET["location"]) && $location[0] == $_GET["location"]){echo "selected";};
+                                            echo " \> $location[0]"; 
+                                            echo "</option>"; 
+                                        };
+                                    mysqli_free_result($allLocations);
+                                ?>
+                                </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="searchBox">Sort by:</th>
+                        <td class="searchBox">
+                            <select class="searchBox" name="sortBy">
+                            <?php
+                                foreach($queryArray as $displayName => $SQLName){
+                                echo "<option value=$SQLName";
+                                if(isset($_GET["sortBy"]) && $SQLName == $_GET["sortBy"]){
+                                    echo " selected";
+                                }
+                                echo "> $displayName </option>";
+                                }
                             ?>
                             </select>
-                    </td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="searchBox"> </th>
+                        <td>
+                            <input type="submit" name="submit" value="Search">
+                        </td>
+                    </tr>
+                </table>
+
+            </form>
+        </div>
+    </aside>
+        <div id="inner">
+        <div>
+            <h2>Results</h2>
+            <table class="dataTable">
+<!--                    <colgroup>
+                    <col class="dataTable">
+                    <col class="dataTable">
+                    <col class="dataTable">
+                    <col class="dataTable">
+                    <col class="dataTable">
+                    <col class="dataTable">
+                    <col class="dataTable">
+                </colgroup>-->
+              <thead>
+              <tr>
+                <?php
+                            foreach($queryArray as $displayName => $SQLName) {
+                                    echo "<th class=\"dataTable\">";
+                                    echo $displayName;
+            //			}
+                                    echo "</th> \n";
+                            }
+                    ?>
+                    <th class="dataTable">More Information </th>
                 </tr>
-                <tr>
-                    <th class="dataTable">Sort by:</th>
-                    <td class="dataTable">
-                        <select class="dataTable" name="sortBy">
+             </thead>
+             <tbody>
+
+                    <?php
+            //Build the table
+                            while($row = mysqli_fetch_assoc($result)) {
+                                    ?>
+
                         <?php
-                            foreach($queryArray as $displayName => $SQLName){
-                            echo "<option value=$SQLName";
-                            if(isset($_GET["sortBy"]) && $SQLName == $_GET["sortBy"]){
-                                echo " selected";
+                                    echo "<tr class=\"dataTable\">";
+                                            echo "<td class=\"dataTable\" >" . sprintf('%05d', $row["ItemID"]) . "</td>";
+                                            echo "<td class=\"dataTable\">" .$row["Friendly_Name"] . "</td>";
+                                            echo "<td class=\"dataTable\">";
+                                            echo "<a href=\"companyCard.php?company=";
+                                            echo $row["Manufacture_ManufactureID"];
+                                            echo "\"> ";
+                                            echo $row["Company_Name"] . "</a></td>";
+                                            echo "<td class=\"dataTable\">" .$row["Model"] . "</td>";
+                                            echo "<td class=\"dataTable\">" .$row["EquipType"] . "</td>";
+                                            echo "<td class=\"dataTable\">" . $row["working"]. "</td>";
+            //				echo "<td>" .$row["Serial_Number"] . "</td>";
+                                            echo "<td class=\"dataTable\">";
+                                            echo "<a href=\"locationCard.php?Location=" . $row["Location_LocationID"] . "\" >";
+                                            echo $row["LocationName"] . "</a> </td>";
+                                            echo "<td class=\"dataTable\"> <a href=\"itemCard.php?card=" . $row["ItemID"] . "\" . > More info </a> </td>";
+                                    echo "</tr>";	
+                                    ?> 
+                        <?php
                             }
-                            echo "> $displayName </option>";
-                            }
-                        ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="dataTable"> </th>
-                    <td>
-                        <input type="submit" name="submit" value="Search">
-                    </td>
-                </tr>
+                            mysqli_free_result($result);
+                    ?>
+                  </tbody>
+
             </table>
         </div>
-    </form>
-
-<br />
-<div\>
-  <h2>Results</h2>
-<table class="dataTable">
-	<colgroup>
-    	<col class="dataTable">
-        <col class="dataTable">
-        <col class="dataTable">
-        <col class="dataTable">
-        <col class="dataTable">
-        <col class="dataTable">
-        <col class="dataTable">
-    </colgroup>
-  <thead>
-  <tr>
-    <?php
-		foreach($queryArray as $displayName => $SQLName) {
-			echo "<th class=\"dataTable\">";
-			echo $displayName;
-//			}
-			echo "</th> \n";
-		}
-	?>
-	<th class="dataTable">More Information </th>
-    </tr>
- </thead>
- <tbody>
-
-	<?php
-//Build the table
-		while($row = mysqli_fetch_assoc($result)) {
-			?>
-            
-            <?php
-			echo "<tr class=\"dataTable\">";
-				echo "<td class=\"dataTable\" >" . sprintf('%05d', $row["ItemID"]) . "</td>";
-				echo "<td class=\"dataTable\">" .$row["Friendly_Name"] . "</td>";
-				echo "<td class=\"dataTable\">";
-				echo "<a href=\"companyCard.php?company=";
-				echo $row["Manufacture_ManufactureID"];
-				echo "\"> ";
-				echo $row["Company_Name"] . "</a></td>";
-				echo "<td class=\"dataTable\">" .$row["Model"] . "</td>";
-				echo "<td class=\"dataTable\">" .$row["EquipType"] . "</td>";
-				echo "<td class=\"dataTable\">" . $row["working"]. "</td>";
-//				echo "<td>" .$row["Serial_Number"] . "</td>";
-				echo "<td class=\"dataTable\">";
-				echo "<a href=\"locationCard.php?Location=" . $row["Location_LocationID"] . "\" >";
-				echo $row["LocationName"] . "</a> </td>";
-				echo "<td class=\"dataTable\"> <a href=\"itemCard.php?card=" . $row["ItemID"] . "\" . > More info </a> </td>";
-			echo "</tr>";	
-			?> 
-            <?php
-		}
-		mysqli_free_result($result);
-	?>
-      </tbody>
-
-</table>
-</div>
+    </div>
 </div>
 </body>
 </html>
